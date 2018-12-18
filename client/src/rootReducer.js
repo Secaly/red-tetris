@@ -1,9 +1,7 @@
 import { combineReducers } from 'redux';
 
-import events from './reducers/events';
-import inputs from './reducers/inputs';
+import game from './reducers/game';
 
 export default combineReducers({
-  events,
-  inputs,
+  game,
 });

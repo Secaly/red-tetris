@@ -1,0 +1,22 @@
+/* ****************************************************************************
+
+GamePage.js 
+
+**************************************************************************** */
+
+.board {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.line {
+  display: flex;
+  flex-direction: row;
+}
+
+.element {
+  height: 3vh;
+  width: 3vh;
+}
