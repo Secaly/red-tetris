@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ping from '../actions/ping';
-import helloWorld from '../actions/helloWorld';
 import inputs from '../actions/inputs';
 import getPiece from '../actions/getPiece';
+import fallPiece from '../actions/fallPiece';
 
 import '../style.css';
 
@@ -26,13 +26,22 @@ const GamePage = props => {
     if (!props.game.piece) props.getPiece();
   });
 
+  useEffect(() => {
+    // fall handler hook
+    const interval = window.setInterval(() => {
+      props.fallPiece();
+    }, 1000);
+    return () => {
+      window.clearInterval(interval);
+    };
+  }, []);
+
   const COLOR = {
     0: 'black',
     1: 'white',
   };
 
   ping();
-  helloWorld();
 
   return (
     <div>
@@ -57,9 +66,9 @@ const GamePage = props => {
 
 GamePage.propTypes = {
   ping: PropTypes.func.isRequired,
-  helloWorld: PropTypes.func.isRequired,
   inputs: PropTypes.func.isRequired,
   getPiece: PropTypes.func.isRequired,
+  fallPiece: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -70,5 +79,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { ping, helloWorld, inputs, getPiece },
+  { ping, inputs, getPiece, fallPiece },
 )(GamePage);
