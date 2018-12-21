@@ -1,4 +1,5 @@
-import { CLIENT_HELLOWORLD, CLIENT_INPUT, SERVER_GETPIECE } from '../types';
+import _ from 'lodash';
+import { CLIENT_INPUT, CLIENT_FALLPIECE, SERVER_GETPIECE } from '../types';
 
 const initialState = {
   boardFix: [
@@ -46,63 +47,132 @@ const initialState = {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ],
   piece: '',
-  helloWorld: true,
-};
-
-const initialPiece = {
-  form: [[0, 1, 0], [1, 1, 1]],
-  pos: [0, 0],
 };
 
 const joinPiece = game => {
   game.boardFlex = game.boardFix.map(x => x.slice(0));
-  game.piece.form.map((pieceLine, index) =>
-    game.boardFlex[game.piece.pos[0] + index].splice(
-      game.piece.pos[1],
-      pieceLine.length,
-      ...pieceLine,
-    ),
+  _.forEach(game.piece.form[game.piece.rotation], (line, lineIndex) =>
+    _.forEach(line, (cell, cellIndex) => {
+      if (
+        game.boardFlex[game.piece.pos[0] + lineIndex][
+          game.piece.pos[1] + cellIndex
+        ] === 0
+      ) {
+        game.boardFlex[game.piece.pos[0] + lineIndex][
+          game.piece.pos[1] + cellIndex
+        ] = cell;
+      }
+    }),
   );
-  return game.boardFlex;
+};
+
+const fixPiece = game => {
+  _.forEach(game.piece.form[game.piece.rotation], (line, lineIndex) =>
+    _.forEach(line, (cell, cellIndex) => {
+      if (
+        game.boardFix[game.piece.pos[0] + lineIndex][
+          game.piece.pos[1] + cellIndex
+        ] === 0
+      ) {
+        game.boardFix[game.piece.pos[0] + lineIndex][
+          game.piece.pos[1] + cellIndex
+        ] = cell;
+      }
+    }),
+  );
+  game.piece = '';
+};
+
+const isFree = (game, movement) => {
+  switch (movement) {
+    case 'left':
+      return !game.piece.form[game.piece.rotation].some((line, lineIndex) =>
+        line.some(
+          (cell, caseIndex) =>
+            ((game.piece.pos[1] + caseIndex > 0 &&
+              game.boardFix[game.piece.pos[0] + lineIndex][
+                game.piece.pos[1] + caseIndex
+              ] === 1) ||
+              game.piece.pos[1] + caseIndex === 0) &&
+            cell === 1,
+        ),
+      );
+    case 'right':
+      return !game.piece.form[game.piece.rotation].some((line, lineIndex) =>
+        line.some(
+          (cell, caseIndex) =>
+            ((game.piece.pos[1] + caseIndex + 1 < 10 &&
+              game.boardFix[game.piece.pos[0] + lineIndex][
+                game.piece.pos[1] + caseIndex + 1
+              ] === 1) ||
+              game.piece.pos[1] + caseIndex + 1 === 10) &&
+            cell === 1,
+        ),
+      );
+    case 'down':
+      return !game.piece.form[game.piece.rotation].some((line, lineIndex) =>
+        line.some(
+          (cell, caseIndex) =>
+            ((game.piece.pos[0] + lineIndex + 1 < 20 &&
+              game.boardFix[game.piece.pos[0] + lineIndex + 1][
+                game.piece.pos[1] + caseIndex
+              ] === 1) ||
+              game.piece.pos[0] + lineIndex + 1 === 20) &&
+            cell === 1,
+        ),
+      );
+    default:
+      return true;
+  }
 };
 
 const moveLeft = game => {
-  if (game.piece.pos[1] > 0) {
+  if (game.piece && isFree(game, 'left')) {
     game.piece.pos[1] -= 1;
-    return { ...game, board: joinPiece(game), piece: { ...game.piece } };
+    joinPiece(game);
   }
-  return game;
+  return { ...game };
 };
 
 const moveRight = game => {
-  if (game.piece.pos[1] < 10 - game.piece.form[0].length) {
+  if (game.piece && isFree(game, 'right')) {
     game.piece.pos[1] += 1;
-    return { ...game, board: joinPiece(game), piece: { ...game.piece } };
+    joinPiece(game);
   }
-  return game;
+  return { ...game };
 };
 
 const moveDown = game => {
-  if (game.piece.pos[0] < 20 - game.piece.form.length) {
+  if (game.piece && isFree(game, 'down')) {
     game.piece.pos[0] += 1;
-    return { ...game, board: joinPiece(game), piece: { ...game.piece } };
+    joinPiece(game);
+  } else if (game.piece && !isFree(game, 'down')) {
+    fixPiece(game);
   }
-  return game;
+  return { ...game };
+};
+
+const getPiece = game => {
+  game.piece = {
+    form: {
+      0: [[0, 0, 0], [1, 1, 0], [0, 1, 0], [0, 1, 0]],
+      1: [[0, 0, 0], [0, 1, 0], [0, 1, 1], [0, 1, 0]],
+      2: [[0, 0, 0], [0, 0, 0], [1, 1, 1], [0, 1, 0]],
+      3: [[0, 0, 0], [0, 1, 0], [1, 1, 0], [0, 1, 0]],
+    },
+    rotation: 0,
+    pos: [0, 2],
+  };
+  joinPiece(game);
+  return { ...game };
 };
 
 export default function game(state = initialState, action = {}) {
   switch (action.type) {
     case SERVER_GETPIECE:
-      return {
-        ...state,
-        piece: initialPiece,
-        boardFlex: joinPiece({ ...state, piece: initialPiece }),
-      };
-    case CLIENT_HELLOWORLD:
-      return {
-        ...state,
-        helloWorld: !state.helloWorld,
-      };
+      return getPiece(state);
+    case CLIENT_FALLPIECE:
+      return moveDown(state);
     case CLIENT_INPUT:
       switch (action.input) {
         case 37: {
