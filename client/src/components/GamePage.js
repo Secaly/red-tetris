@@ -38,7 +38,7 @@ const GamePage = props => {
 
   const COLOR = {
     0: 'black',
-    1: 'white',
+    1: 'red',
   };
 
   ping();
