@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CLIENT_INPUT, CLIENT_FALLPIECE, SERVER_GETPIECE } from '../types';
+import { CLIENT_INPUT, CLIENT_FALLPIECE } from '../types';
 
 const initialState = {
   boardFix: [
@@ -198,25 +198,16 @@ const rotateRight = game => {
   return { ...game };
 };
 
-const getPiece = game => {
-  game.piece = {
-    form: {
-      0: [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
-      1: [[0, 1, 0], [0, 1, 0], [0, 1, 1]],
-      2: [[0, 0, 0], [1, 1, 1], [1, 0, 0]],
-      3: [[1, 1, 0], [0, 1, 0], [0, 1, 0]],
-    },
-    rotation: 0,
-    pos: [0, 2],
-  };
+const getPiece = (game, piece) => {
+  game.piece = piece;
   joinPiece(game);
   return { ...game };
 };
 
 export default function game(state = initialState, action = {}) {
   switch (action.type) {
-    case SERVER_GETPIECE:
-      return getPiece(state);
+    case 'getPiece':
+      return getPiece(state, action.data);
     case CLIENT_FALLPIECE:
       return moveDown(state);
     case CLIENT_INPUT:

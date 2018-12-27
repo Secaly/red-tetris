@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import ping from '../actions/ping';
 import inputs from '../actions/inputs';
 import getPiece from '../actions/getPiece';
 import fallPiece from '../actions/fallPiece';
@@ -41,11 +40,11 @@ const GamePage = props => {
     1: 'red',
   };
 
-  ping();
-
   return (
     <div>
       <div>GamePage</div>
+      <div>{props.match.params.room}</div>
+      <div>{props.match.params.playerName}</div>
       <div className="board">
         {props.game.boardFlex.map(line => {
           return (
@@ -65,7 +64,6 @@ const GamePage = props => {
 };
 
 GamePage.propTypes = {
-  ping: PropTypes.func.isRequired,
   inputs: PropTypes.func.isRequired,
   getPiece: PropTypes.func.isRequired,
   fallPiece: PropTypes.func.isRequired,
@@ -79,5 +77,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { ping, inputs, getPiece, fallPiece },
+  { inputs, getPiece, fallPiece },
 )(GamePage);
