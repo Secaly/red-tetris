@@ -3,6 +3,8 @@ import path from 'path';
 import http from 'http';
 import socketIO from 'socket.io';
 
+import Piece from './models/Piece';
+
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
@@ -18,17 +20,8 @@ io.on('connection', socket => {
       case 'server/getPiece':
         console.log('Got getPiece !');
         socket.emit('action', {
-          type: 'getPiece',
-          data: {
-            form: {
-              0: [[0, 0, 1], [1, 1, 1], [0, 0, 0]],
-              1: [[0, 1, 0], [0, 1, 0], [0, 1, 1]],
-              2: [[0, 0, 0], [1, 1, 1], [1, 0, 0]],
-              3: [[1, 1, 0], [0, 1, 0], [0, 1, 0]]
-            },
-            rotation: 0,
-            pos: [0, 2]
-          }
+          type: 'server/sendPiece',
+          data: new Piece()
         });
         break;
       default:

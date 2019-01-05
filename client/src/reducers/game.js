@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { CLIENT_INPUT, CLIENT_FALLPIECE } from '../types';
+import { CLIENT_INPUT, CLIENT_FALLPIECE, SERVER_SENDPIECE } from '../types';
 
 const initialState = {
   boardFix: [
@@ -95,11 +95,11 @@ const isFree = (game, movement) => {
       return !game.piece.form[game.piece.rotation].some((line, lineIndex) =>
         line.some(
           (cell, cellIndex) =>
-            cell === 1 &&
+            cell > 0 &&
             ((game.piece.pos[1] + cellIndex - 1 >= 0 &&
               game.boardFix[game.piece.pos[0] + lineIndex][
                 game.piece.pos[1] + cellIndex - 1
-              ] === 1) ||
+              ] > 0) ||
               game.piece.pos[1] + cellIndex - 1 < 0),
         ),
       );
@@ -107,11 +107,11 @@ const isFree = (game, movement) => {
       return !game.piece.form[game.piece.rotation].some((line, lineIndex) =>
         line.some(
           (cell, cellIndex) =>
-            cell === 1 &&
+            cell > 0 &&
             ((game.piece.pos[1] + cellIndex + 1 < 10 &&
               game.boardFix[game.piece.pos[0] + lineIndex][
                 game.piece.pos[1] + cellIndex + 1
-              ] === 1) ||
+              ] > 0) ||
               game.piece.pos[1] + cellIndex + 1 === 10),
         ),
       );
@@ -119,11 +119,11 @@ const isFree = (game, movement) => {
       return !game.piece.form[game.piece.rotation].some((line, lineIndex) =>
         line.some(
           (cell, cellIndex) =>
-            cell === 1 &&
+            cell > 0 &&
             ((game.piece.pos[0] + lineIndex + 1 < 20 &&
               game.boardFix[game.piece.pos[0] + lineIndex + 1][
                 game.piece.pos[1] + cellIndex
-              ] === 1) ||
+              ] > 0) ||
               game.piece.pos[0] + lineIndex + 1 === 20),
         ),
       );
@@ -150,7 +150,7 @@ const moveRight = game => {
 
 const removeFullLines = game => {
   _.forEach(game.boardFix, (line, lineIndex) => {
-    if (line.every(cell => cell === 1)) {
+    if (line.every(cell => cell > 0)) {
       game.boardFix.splice(lineIndex, 1);
       game.boardFix.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     }
@@ -172,10 +172,10 @@ const canRotate = (game, rotation) =>
   !rotation.some((line, lineIndex) =>
     line.some(
       (cell, cellIndex) =>
-        (cell === 1 &&
+        (cell > 0 &&
           game.boardFix[game.piece.pos[0] + lineIndex][
             game.piece.pos[1] + cellIndex
-          ] === 1) ||
+          ] > 0) ||
         game.piece.pos[0] + lineIndex >= 20 ||
         game.piece.pos[1] + cellIndex < 0 ||
         game.piece.pos[1] + cellIndex >= 10,
@@ -206,7 +206,7 @@ const getPiece = (game, piece) => {
 
 export default function game(state = initialState, action = {}) {
   switch (action.type) {
-    case 'getPiece':
+    case SERVER_SENDPIECE:
       return getPiece(state, action.data);
     case CLIENT_FALLPIECE:
       return moveDown(state);
