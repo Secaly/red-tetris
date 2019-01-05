@@ -36,8 +36,14 @@ const GamePage = props => {
   }, []);
 
   const COLOR = {
-    0: 'black',
-    1: 'red',
+    0: 'Black',
+    1: 'Aqua',
+    2: 'Blue',
+    3: 'Orange',
+    4: 'Yellow',
+    5: 'YellowGreen',
+    6: 'DarkViolet',
+    7: 'Red',
   };
 
   return (
