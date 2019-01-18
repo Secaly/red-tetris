@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import inputs from '../actions/inputs';
 import getPiece from '../actions/getPiece';
 import fallPiece from '../actions/fallPiece';
+import gameConnection from '../actions/gameConnection';
 
 import '../style.css';
 
@@ -22,7 +23,12 @@ const GamePage = props => {
 
   useEffect(() => {
     // piece handler hook
-    if (!props.game.piece) props.getPiece();
+    if (!props.game.piece && props.game.boardFix)
+      props.getPiece(
+        props.match.params.room,
+        props.match.params.playerName,
+        props.game.boardFix,
+      );
   });
 
   useEffect(() => {
@@ -32,6 +38,14 @@ const GamePage = props => {
     }, 1000);
     return () => {
       window.clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    // game connection handler hook
+    props.gameConnection(props.match.params.room, 'join');
+    return () => {
+      props.gameConnection(props.match.params.room, 'leave');
     };
   }, []);
 
@@ -50,20 +64,45 @@ const GamePage = props => {
     <div>
       <div>GamePage</div>
       <div>{props.match.params.room}</div>
-      <div>{props.match.params.playerName}</div>
-      <div className="board">
-        {props.game.boardFlex.map(line => {
-          return (
-            <div className="line">
-              {line.map(element => (
-                <div
-                  className="element"
-                  style={{ backgroundColor: COLOR[element] }}
-                />
-              ))}
-            </div>
-          );
-        })}
+      <div className="game">
+        <div className="board">
+          <div>{props.match.params.playerName}</div>
+          {props.game.boardFlex.map((line, id) => {
+            return (
+              <div className="line" key={id}>
+                {line.map((element, id) => (
+                  <div
+                    className="element"
+                    key={id}
+                    style={{ backgroundColor: COLOR[element] }}
+                  />
+                ))}
+              </div>
+            );
+          })}
+        </div>
+        <div className="board">
+          {props.game.otherPlayers.map((data, id) => {
+            return [
+              <div>{data.name}</div>,
+              <div>
+                {data.board.map((line, id) => {
+                  return (
+                    <div className="line" key={id}>
+                      {line.map((element, id) => (
+                        <div
+                          className="element"
+                          key={id}
+                          style={{ backgroundColor: COLOR[element] }}
+                        />
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>,
+            ];
+          })}
+        </div>
       </div>
     </div>
   );
@@ -73,6 +112,7 @@ GamePage.propTypes = {
   inputs: PropTypes.func.isRequired,
   getPiece: PropTypes.func.isRequired,
   fallPiece: PropTypes.func.isRequired,
+  gameConnection: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -83,5 +123,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { inputs, getPiece, fallPiece },
+  { inputs, getPiece, fallPiece, gameConnection },
 )(GamePage);
