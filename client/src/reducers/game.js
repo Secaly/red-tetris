@@ -1,7 +1,39 @@
 import _ from 'lodash';
-import { CLIENT_INPUT, CLIENT_FALLPIECE, SERVER_SENDPIECE } from '../types';
+import {
+  CLIENT_INPUT,
+  CLIENT_FALLPIECE,
+  SERVER_SENDPIECE,
+  SERVER_SENDGAMEUPDATE,
+} from '../types';
 
 const initialState = {
+  otherPlayers: [
+    {
+      name: '',
+      board: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      ],
+    },
+  ],
   boardFix: [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -204,8 +236,17 @@ const getPiece = (game, piece) => {
   return { ...game };
 };
 
+const getUpdate = (game, playerName, board) => {
+  console.log(playerName, board);
+  game.otherPlayers[0].name = playerName;
+  game.otherPlayers[0].board = board.map(x => x.slice(0));
+  return { ...game };
+};
+
 export default function game(state = initialState, action = {}) {
   switch (action.type) {
+    case SERVER_SENDGAMEUPDATE:
+      return getUpdate(state, action.data.playerName, action.data.board);
     case SERVER_SENDPIECE:
       return getPiece(state, action.data);
     case CLIENT_FALLPIECE:

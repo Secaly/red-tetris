@@ -4,7 +4,6 @@ import GamePage from './components/GamePage';
 
 const App = () => (
   <div>
-    Hello World
     <Route path="/:room[:playerName]" component={GamePage} />
   </div>
 );
