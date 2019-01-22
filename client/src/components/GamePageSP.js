@@ -59,7 +59,8 @@ const GamePageMP = props => {
 
   return (
     <div>
-      <div>GamePageSP</div>
+      <div className="game-title">Red Tetris</div>
+      <div className="gamemode-title">Singleplayer mod</div>
       <div>{props.match.params.room}</div>
       <div className="game">
         <div className="board">

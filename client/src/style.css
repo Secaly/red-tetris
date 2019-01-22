@@ -4,6 +4,24 @@ GamePage.js
 
 **************************************************************************** */
 
+.app {
+  text-align: center;
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.game-title {
+  color: white;
+}
+
+.gamemode-title {
+  color: white;
+}
+
 .game {
   display: flex;
   flex-direction: row;

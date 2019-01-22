@@ -11,7 +11,9 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import rootReducer from './rootReducer';
 
-const socket = io('http://localhost:8080');
+import './index.css';
+
+const socket = io('https://2oz78px7mr.sse.codesandbox.io/');
 const socketIoMiddleware = createSocketIoMiddleware(socket, 'server/');
 
 const store = createStore(
