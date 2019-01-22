@@ -8,7 +8,7 @@ import gameConnection from '../actions/gameConnection';
 
 import '../style.css';
 
-const GamePage = props => {
+const GamePageMP = props => {
   useEffect(() => {
     // key handler hook
     const input = event => {
@@ -62,7 +62,7 @@ const GamePage = props => {
 
   return (
     <div>
-      <div>GamePage</div>
+      <div>GamePageMP</div>
       <div>{props.match.params.room}</div>
       <div className="game">
         <div className="board">
@@ -108,7 +108,7 @@ const GamePage = props => {
   );
 };
 
-GamePage.propTypes = {
+GamePageMP.propTypes = {
   inputs: PropTypes.func.isRequired,
   getPiece: PropTypes.func.isRequired,
   fallPiece: PropTypes.func.isRequired,
@@ -124,4 +124,4 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   { inputs, getPiece, fallPiece, gameConnection },
-)(GamePage);
+)(GamePageMP);
