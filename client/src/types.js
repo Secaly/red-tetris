@@ -6,3 +6,4 @@ export const SERVER_SENDGAMEUPDATE = 'server/gameUpdate';
 
 export const CLIENT_INPUT = 'client/input';
 export const CLIENT_FALLPIECE = 'client/fallPiece';
+export const CLIENT_STARTGAME = 'client/startGame';
