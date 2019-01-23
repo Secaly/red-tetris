@@ -29,21 +29,21 @@ io.on('connection', socket => {
         console.log('Got getPiece !');
         socket.emit('action', {
           type: 'server/sendPiece',
-          data: new Piece()
+          data: new Piece(),
         });
         socket.broadcast.to(action.gameName).emit('action', {
           type: 'server/gameUpdate',
           data: {
             playerName: action.playerName,
-            board: action.board
-          }
+            board: action.board,
+          },
         });
         break;
       case 'server/newPlayer':
         console.log('Got newPlayer !');
         socket.emit('action', {
           type: 'server/newPlayer',
-          data: new Piece()
+          data: new Piece(),
         });
         break;
       default:
