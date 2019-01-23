@@ -4,6 +4,24 @@ GamePage.js
 
 **************************************************************************** */
 
+.app {
+  text-align: center;
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.game-title {
+  color: white;
+}
+
+.gamemode-title {
+  color: white;
+}
+
 .game {
   display: flex;
   flex-direction: row;
@@ -11,7 +29,18 @@ GamePage.js
   align-items: center;
 }
 
-.board {
+.name {
+  height: 30px;
+  line-height: 30px;
+  color: white;
+}
+
+.room {
+  color: white;
+}
+
+.player-board {
+  width: 100%;
   padding: 5px;
   display: flex;
   flex-direction: column;
@@ -19,12 +48,53 @@ GamePage.js
   align-items: center;
 }
 
-.line {
+.player-board .line {
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
 
-.element {
-  height: 3vh;
-  width: 3vh;
+.player-board .element {
+  position: relative;
+  width: 100%;
+  border: 1px solid black;
+}
+
+.player-board .element:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+
+.other-board {
+  width: 100%;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.other-division {
+  width: 40%;
+  padding: 5px;
+}
+
+.other-board .line {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.other-board .element {
+  position: relative;
+  width: 100%;
+  border: 1px solid black;
+}
+
+.other-board .element:before {
+  content: '';
+  display: block;
+  padding-top: 100%;
 }

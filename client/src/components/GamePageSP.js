@@ -5,6 +5,7 @@ import { BrowserRouter as Link } from 'react-router-dom';
 import inputs from '../actions/inputs';
 import getPiece from '../actions/getPiece';
 import fallPiece from '../actions/fallPiece';
+import startGame from '../actions/startGame';
 import gameConnection from '../actions/gameConnection';
 import useInput from '../customHooks';
 
@@ -28,7 +29,11 @@ const GamePageMP = props => {
 
   useEffect(() => {
     // piece handler hook
-    if (!props.game.piece && props.game.boardFix)
+    if (
+      !props.game.piece &&
+      props.game.boardFix &&
+      props.game.gameStatus === 'start'
+    )
       props.getPiece(
         props.match.params.room,
         props.match.params.playerName,
@@ -58,11 +63,12 @@ const GamePageMP = props => {
   };
 
   return (
-    <div>
-      <div>GamePageSP</div>
+    <div className="game-screen">
+      <div className="game-title">Red Tetris</div>
+      <div className="gamemode-title">Singleplayer mod</div>
       <div>{props.match.params.room}</div>
       <div className="game">
-        <div className="board">
+        <div className="player-board">
           <div>{props.match.params.playerName}</div>
           {props.game.boardFlex.map((line, id) => {
             return (
@@ -78,6 +84,9 @@ const GamePageMP = props => {
             );
           })}
         </div>
+        <button className="form-button" onClick={() => props.startGame()}>
+          Start
+        </button>
       </div>
       <input
         id="userName"
@@ -101,6 +110,7 @@ GamePageMP.propTypes = {
   getPiece: PropTypes.func.isRequired,
   fallPiece: PropTypes.func.isRequired,
   gameConnection: PropTypes.func.isRequired,
+  startGame: PropTypes.func.isRequired,
 };
 
 function mapStateToProps(state) {
@@ -111,5 +121,5 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-  { inputs, getPiece, fallPiece, gameConnection },
+  { inputs, getPiece, fallPiece, gameConnection, startGame },
 )(GamePageMP);
